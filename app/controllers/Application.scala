@@ -38,7 +38,7 @@ object Application extends Controller {
     
     Enumerator.generateM[String] {
 //    	Promise.timeout(Some(dateFormat.format(new Date)), 500 milliseconds)
-    	Promise.timeout(Some(Random.nextInt(100) + ""), 500 milliseconds)
+    	Promise.timeout(Some((Random.nextInt(100) - 50) + ";" + (Random.nextInt(100) - 50)), 500 milliseconds)
     }
   }
   

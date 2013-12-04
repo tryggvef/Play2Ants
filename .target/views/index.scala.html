@@ -59,15 +59,18 @@
                     //data = JSON.parse(e.data);
                     eventsLength += 1;
 
-                    var qq = parseInt(e.data);
+                    var qq = e.data.replace('\'', '');
+                    var qqs = qq.replace('\'', '');
+                    
+                    var res = qqs.split(";");
                     
                     canvasContext.beginPath();
-                    var xx = canvasCenterX + qq + 30.3;
-                    y = canvasCenterY;
-                    canvasContext.arc(xx, y, 10, 0, Math.PI * 2, true);
+                    x = canvasCenterX + (+res[0]);
+                    y = canvasCenterY + (+res[1]);
+                    canvasContext.arc(x, y, 5, 0, Math.PI * 2, true);
                     canvasContext.fill();
 
-                    debugElem.innerHTML = "e.data: " + e.data + typeof(qq) + typeof(y);
+                    debugElem.innerHTML = "e.data: " + e.data + qqs + " " + res;
 
                 }, false);
 
