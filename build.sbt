@@ -1,4 +1,4 @@
-name := "testscala"
+name := "Play2Ants"
 
 version := "1.0-SNAPSHOT"
 
