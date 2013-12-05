@@ -25,7 +25,7 @@
 
             // paint it black
             canvasContext.fillStyle = '#990000';
-            canvasContext.fillRect (0, 0, canvas.width, canvas.height);
+            //canvasContext.fillRect (0, 0, canvas.width, canvas.height);
             canvasContext.fillStyle = '#000000';
 
             var PI2 = Math.PI * 2;
@@ -59,18 +59,20 @@
                     //data = JSON.parse(e.data);
                     eventsLength += 1;
 
-                    var qq = e.data.replace('\'', '');
-                    var qqs = qq.replace('\'', '');
+                    //var qq = e.data.replace('\'', '');
+                    //var qqs = qq.replace('\'', '');
                     
+                    // "Replace all (/.../g) leading slash (^\/) or (|) trailing slash (\/$) with an empty string."
+					var qqs = e.data.replace(/^\'|\'$/g, '');;
                     var res = qqs.split(";");
                     
                     canvasContext.beginPath();
-                    x = canvasCenterX + (+res[0]);
+                    x = canvasCenterX + parseInt(res[0]);
                     y = canvasCenterY + (+res[1]);
-                    canvasContext.arc(x, y, 5, 0, Math.PI * 2, true);
+                    canvasContext.arc(x, y, 5, 0, PI2 / 2, true);
                     canvasContext.fill();
 
-                    debugElem.innerHTML = "e.data: " + e.data + qqs + " " + res;
+                    debugElem.innerHTML = "e.data: " + e.data + qqs + " splitted:" + res;
 
                 }, false);
 

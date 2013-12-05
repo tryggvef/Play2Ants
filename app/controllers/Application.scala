@@ -2,10 +2,8 @@ package controllers
 
 import java.text.SimpleDateFormat
 import java.util.Date
-
 import scala.concurrent.duration.DurationInt
 import scala.util.Random
-
 import akka.actor.Actor
 import akka.actor.ActorSystem
 import akka.actor.Props
@@ -16,6 +14,9 @@ import play.api.libs.concurrent.Promise
 import play.api.libs.iteratee.Enumerator
 import play.api.mvc.Action
 import play.api.mvc.Controller
+import play.api.libs.iteratee.Enumeratee
+import play.api.libs.json.JsValue
+import play.api.libs.json.Json._
 
 object Application extends Controller {
 
@@ -24,6 +25,14 @@ object Application extends Controller {
 	    case "hello" => println("hello from %s".format(myName))
 	    case _       => println("huh?, said %s".format(myName))
 	  }
+  }
+  
+  
+  def randomIntegersString: Some[String] = {
+    
+    val rString = (Random.nextInt(100) - 50) + ";" + (Random.nextInt(100) - 50)
+      
+    Some(rString)
   }
   
     /** 
@@ -38,11 +47,27 @@ object Application extends Controller {
     
     Enumerator.generateM[String] {
 //    	Promise.timeout(Some(dateFormat.format(new Date)), 500 milliseconds)
-    	Promise.timeout(Some((Random.nextInt(100) - 50) + ";" + (Random.nextInt(100) - 50)), 500 milliseconds)
+//    	Promise.timeout(Some((Random.nextInt(100) - 50) + ";" + (Random.nextInt(100) - 50)), 500 milliseconds)
+    	Promise.timeout(randomIntegersString, 500 milliseconds)
     }
   }
   
+  lazy val clock2: Enumerator[String] = {
+    
+    import java.text._
+    
+    val dateFormat = new SimpleDateFormat("HH mm ss")
+    
+    Enumerator.generateM[String] {
+//    	Promise.timeout(Some(dateFormat.format(new Date)), 500 milliseconds)
+    	Promise.timeout(Some((Random.nextInt(100) + 100) + ";" + (Random.nextInt(150) * -1)), 900 milliseconds)
+    }
+  }
   
+	val asJson: Enumeratee[String, JsValue] = Enumeratee.map[String] { 
+	    case s : String => toJson(Map("verdi1" -> toJson(s), "verdi2" -> toJson(s)))
+	    case _  => toJson(Map("verdi1" -> toJson("NA"), "verdi2" -> toJson("NA")))
+	}  
   
   // Define a generic event,
 	  trait ZapEvent {
@@ -77,7 +102,10 @@ object Application extends Controller {
   }
 
     def stream = Action {
-    	Ok.chunked(clock &> EventSource()).as("text/event-stream")
+      // >- Alias for interleave
+      // &> Compose this Enumerator with an Enumeratee. Alias for through
+//    	Ok.chunked((clock >- clock2) &> asJson ><> EventSource()).as("text/event-stream")
+    	Ok.chunked((clock >- clock2).through(asJson).through(EventSource())).as("text/event-stream")
     }
 
 }
