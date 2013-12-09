@@ -108,4 +108,14 @@ object Application extends Controller {
     	Ok.chunked((clock >- clock2).through(asJson).through(EventSource())).as("text/event-stream")
     }
 
+    //     	(request.body \ "np:TimeSeries" headOption).map(_.text).map { name =>
+    // http://bcomposes.wordpress.com/2012/05/04/basic-xml-processing-with-scala/
+    // http://www.authorcode.com/text-animation-in-html5/
+    // http://bcomposes.wordpress.com/2012/05/12/processing-json-in-scala-with-jerkson/
+//    def feedXmlPost = Action(parse.xml) { request =>
+//    	(request.body \ "np:TimeSeries" headOption).map(_.text).map { name =>
+//    		Ok("Hello " + name)
+//    	}
+//    }
+
 }
