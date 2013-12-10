@@ -117,5 +117,20 @@ object Application extends Controller {
 //    		Ok("Hello " + name)
 //    	}
 //    }
+    
+    
+//    http://stackoverflow.com/questions/19241930/play-framework-parse-xml-to-model
+//
+//    import scala.xml.{Comment => _, _}
+//
+//
+//	case class Comment(commentDate: String, commentText: String)
+//	case class MyItem(id: Option[Long] = None, name: String, comments: List[Comment])
+//	
+//	object MyParser {
+//	  def parse(el: Elem) =
+//	    MyItem(Some((el \ "id").text.toLong), (el \ "name").text,
+//	      (el \\ "comment") map { c => Comment((c \ "comment_date").text, (c \ "comment_text").text)} toList)
 
+}
 }
